@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="springboot-anntion-consumer" />
+        <module name="dubbo-api" />
+        <module name="demo" />
+        <module name="dubbo-api3" />
+        <module name="dubbo-api4" />
+        <module name="springboot-permission-consumer" />
+        <module name="springboot-provider" />
+        <module name="springboot-permission-provider" />
+        <module name="springboot-thread" />
+        <module name="springboot-highcharts" />
+        <module name="ssh-customer" />
+        <module name="springboot-consumer" />
+        <module name="springboot-anntion-provider" />
+        <module name="springboot-poi" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="dubbo-api" target="1.5" />
+      <module name="dubbo-api2" target="1.5" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="demo" options="-parameters" />
+      <module name="dubbo-api" options="" />
+      <module name="springboot-anntion-consumer" options="-parameters" />
+      <module name="springboot-anntion-provider" options="-parameters" />
+      <module name="springboot-consumer" options="-parameters" />
+      <module name="springboot-highcharts" options="-parameters" />
+      <module name="springboot-permission-consumer" options="-parameters" />
+      <module name="springboot-permission-provider" options="-parameters" />
+      <module name="springboot-poi" options="-parameters" />
+      <module name="springboot-provider" options="-parameters" />
+      <module name="springboot-thread" options="-parameters" />
+    </option>
+  </component>
+</project>

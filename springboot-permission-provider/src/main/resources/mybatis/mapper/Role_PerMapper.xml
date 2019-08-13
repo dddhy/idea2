@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.dao.Role_PerMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.model.Role_Per" >
+    <result column="id" property="id" jdbcType="BIGINT" />
+    <result column="roleid" property="roleid" jdbcType="BIGINT" />
+    <result column="perid" property="perid" jdbcType="BIGINT" />
+  </resultMap>
+  <insert id="insert" parameterType="com.jk.model.Role_Per" >
+    insert into role_permission (id, roleid, perid
+      )
+    values (#{id,jdbcType=BIGINT}, #{roleid,jdbcType=BIGINT}, #{perid,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jk.model.Role_Per" >
+    insert into role_permission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="roleid != null" >
+        roleid,
+      </if>
+      <if test="perid != null" >
+        perid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="roleid != null" >
+        #{roleid,jdbcType=BIGINT},
+      </if>
+      <if test="perid != null" >
+        #{perid,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>

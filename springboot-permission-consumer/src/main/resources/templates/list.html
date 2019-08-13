@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <script type="text/javascript" src="../js/jquery-1.8.0.js"></script>
+    <script type="text/javascript" src="../js/easyui1.5/jquery.easyui.min.js"> </script>
+    <script type="text/javascript" src="../js/easyui1.5/locale/easyui-lang-zh_CN.js"> </script>
+
+    <link rel="stylesheet" href="../js/easyui1.5/themes/default/easyui.css"></link>
+    <link rel="stylesheet" href="../js/easyui1.5/themes/icon.css"></link>
+    <!-- ztree树 -->
+    <script src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+    <link rel="stylesheet" href="../js/ztree/zTreeStyle.css" />
+    <script type="text/javascript" src="../js/EasyuiCRUD.js"></script>
+    <title>Insert title here</title>
+</head>
+<body>
+<!--<div>
+    用户名：<input id="mname" name="mname"><br>
+    类型：<select id="typeid" name="typeid">
+    <option value="0">请选择</option>
+    <option value="11">流行</option>
+    <option value="22">摇滚</option>
+</select><br>
+    状态：<select id="status" name="status">
+    <option value="0">请选择</option>
+    <option value="1">上架</option>
+    <option value="2">下架</option>
+</select><br>
+    上架时间:<input id="startdate" type="date" name="startdate">-<input id="enddate" type="date" name="enddate"><br>
+
+    <a id="btn" class="easyui-linkbutton" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>
+</div>-->
+<div>
+    <a href="javaScript:openDialog()" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加</a>
+    <a href="javaScript:updDialog()" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">修改</a>
+</div>
+<table id="data" class="easyui-datagrid"></table>
+
+
+<div id="mydialog" closed="true" button="#AddOk" class="easyui-dialog" style="width:400px;height:200px;">
+    <form id="addForm">
+        <input type="hidden" name="userid">
+        <table>
+            <tr>
+                <td>类型</td>
+                <td>
+                    <input type="text" name="typeid" class="easyui-validatebox" required="true">
+                </td>
+            </tr>
+            <tr>
+                <td>年龄</td>
+                <td>
+                    <input type="text" name="userage" class="easyui-validatebox" required="true">
+                </td>
+            </tr>
+            <tr>
+                <td>用户</td>
+                <td>
+                    <input type="text" name="username" class="easyui-validatebox" required="true">
+                </td>
+            </tr>
+            <tr>
+                <td>密码</td>
+                <td>
+                    <input name="userpassword" class="easyui-validatebox" required="true">
+                </td>
+            </tr>
+
+        </table>
+    </form>
+
+    <div id="AddOk">
+        <a href="javaScript:saveDialog()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">提交</a>
+        <a href="javaScript:cancelDialog()" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">取消 </a>
+
+    </div>
+</div>
+
+</body>
+
+<script type="text/javascript">
+    $(function(){
+
+        queryMusic();
+    })
+
+    openDialog = function(){
+
+        $("#mydialog").dialog('open');
+    }
+
+
+    function saveDialog(){
+
+  		$("#addForm").form('submit',{
+
+            url:'../user/addUser',
+            onSumbmit:function(){
+
+                return $("#addForm").form('validate')
+            },
+            success:function(data){
+
+                alert("添加成功！！")
+                //关闭窗口
+                $("#mydialog").dialog('close');
+                //刷新表格数据
+                $("#data").datagrid('reload');
+
+                $("#addForm").form('clear')
+            }
+        });
+
+        $.ajax({
+            url:"<%=request.getContextPath()%>/cusAction!addCus.action",
+            data:$("#addForm").serialize(),
+            type:"post",
+            success:function(){
+
+                alert("添加成功！！")
+
+                $("#mydialog").dialog('close');
+                //刷新表格数据
+                $("#data").datagrid('reload');
+
+            }
+
+        })
+
+    }
+
+
+
+    $("#btn").click(function(){
+
+        $("#data").datagrid('load',{
+            mname:$("#mname").val(),
+            typeid:$("#typeid").val(),
+            status:$("#status").val(),
+            startdate:$("#startdate").val(),
+            enddate:$("#enddate").val(),
+        })
+    })
+
+    queryMusic = function(){
+
+        $("#data").datagrid({
+
+            url:'../user/query',
+            columns:[
+                [
+                {field:'ck',checkbox:true},
+                {field:'userid',title:'id',width:100},
+                {field:'typeid',title:'类型id',width:100},
+                {field:'userage',title:'年龄',width:100},
+                {field:'username',title:'用户名',width:100},
+                {field:'userpassword',title:'密码',width:100},
+                {field:'usertime',title:'时间',width:100},
+                {field:'cz',title:'操作',width:100,
+                    formatter:function(value,row,index){
+                        if(row.status=='2'){
+
+                            var a = "<a href='javascript:delDialog("+row.userid+")' class='easyui-linkbutton' iconCls='icon-ok'>删除</a>";
+                            a+=" | <a href='javascript:up("+row.userid+")' class='easyui-linkbutton' iconCls='icon-ok'>下架</a>";
+                            a+=" | <a href='javascript:updDialog("+row.userid+")' class='easyui-linkbutton' iconCls='icon-ok'>";
+
+                            return a;
+                        }else{
+                            var a = "<a href='javascript:delDialog("+row.userid+")' class='easyui-linkbutton' iconCls='icon-ok'>删除</a>";
+                            a+=" | <a href='javascript:down("+row.userid+")' class='easyui-linkbutton' iconCls='icon-ok'>上架</a>";
+                            a+=" | <a href='javascript:updDialog("+row.userid+")' class='easyui-linkbutton' iconCls='icon-ok'>修改</a>";
+                            return a;
+
+                        }
+
+                    },
+                },
+
+
+            ]
+            ],
+
+            pagination:true,
+
+            pageList:[2,5,10],
+
+            rownumbers:true,
+
+            fitColumns:true
+        })
+    };
+
+
+/*    delDialog = function(id){
+        alert(id);
+        //$.post("url",参数,函数)
+        $.post("user/deleteUser",{id:id},function(result){
+
+            $.messager.alert('提示','删除成功')
+            $("#data").datagrid('reload');
+
+        },"json");
+    }*/
+
+    delDialog = function(id){
+        alert(id);
+        $.ajax({
+
+            url:"../user/deleteUser",
+            data:{id:id},
+            success:function () {
+                $.messager.alert('提示','删除成功')
+                $("#data").datagrid('reload');
+            }
+        })
+    }
+
+
+    updDialog = function(){
+        //	alert(11)
+        var rows = $("#data").datagrid('getSelections');
+        if(1 !=rows.length){
+            $.messager.alert('警告','请选择一条且只能选择一条数据');
+            return;
+        }
+
+        var row = rows[0];
+        $("#mydialog").dialog('open');
+
+        $("#addForm").form('load',row);
+
+        url='addUser?id'+row.userid;
+    }
+
+
+    up = function(mid){
+
+        $.ajax({
+
+            url:"music/up.do?mid="+mid,
+            success:function(){
+
+
+                $("#data").datagrid('reload');
+            }
+        })
+    };
+
+    down = function(mid){
+
+        $.ajax({
+
+            url:"music/down.do?mid="+mid,
+            success:function(){
+
+                    $("#data").datagrid('reload');
+            }
+        });
+    }
+
+</script>
+
+</html>

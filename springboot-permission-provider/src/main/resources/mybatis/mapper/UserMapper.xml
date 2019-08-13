@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.dao.UserDao" >
+  
+  
+ <!--   <select id="loginUser">
+        select * from l_user where username = #{username}
+    </select>-->
+
+
+    <select id="getTreeAll" resultType="com.jk.model.Permission">
+  		SELECT sp.* from l_user s ,user_role ur ,l_role sr,role_permission rp,l_permission sp
+		where s.id = ur.userid
+		and ur.roleid = sr.id
+		and sr.id = rp.roleid
+		and rp.perid = sp.id
+		and s.id = #{id} GROUP BY sp.name
+  </select>
+
+	<insert id="addUser" parameterType="java.util.List">
+
+		INSERT  INTO l_user (username,password)
+		values
+		<foreach collection="list" item="l" separator=",">
+			(#{l.username},#{l.password})
+
+		</foreach>
+	</insert>
+ 
+</mapper>

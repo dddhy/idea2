@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.dao.UserDao" >
+  
+  
+<select id="query" resultType="com.jk.model.User">
+    select * from t_user limit #{start},#{end}
+</select>
+
+    <insert id="addUser" parameterType="java.util.List">
+        INSERT  INTO t_user (typeid,userAge,userName,userPassword,userTime)
+        values 
+        <foreach collection="list" item="l" separator=",">
+            (#{l.typeid},#{l.userage},#{l.username},#{l.userpassword},#{l.usertime})
+
+        </foreach>
+    </insert>
+
+    <select id="query3" resultType="com.jk.model.User">
+
+        select * from t_user
+    </select>
+</mapper>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="../js/jquery-1.8.0.js"></script>
+    <script type="text/javascript" src="../js/easyui1.5/jquery.easyui.min.js"> </script>
+    <script type="text/javascript" src="../js/easyui1.5/locale/easyui-lang-zh_CN.js"> </script>
+
+    <link rel="stylesheet" href="../js/easyui1.5/themes/default/easyui.css"></link>
+    <link rel="stylesheet" href="../js/easyui1.5/themes/icon.css"></link>
+    <!-- ztree树 -->
+    <script src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+    <link rel="stylesheet" href="../js/ztree/zTreeStyle.css" />
+    <script type="text/javascript" src="../js/EasyuiCRUD.js"></script>
+</head>
+<body>
+<div id="dd"  closed="true" class="easyui-dialog" title="菜单" style="width:800px;height:400px;"
+     data-options="iconCls:'icon-save',resizable:true,modal:true">
+    <!-- 下拉树  -->
+    <ul id="tree" class="easyui-tree">
+    </ul>
+    <input type="button" value="提交" onclick="updateRolePermiss()" >
+</div>
+<table id="data" class="easyui-datagrid"></table>
+
+</body>
+
+<script type="text/javascript">
+
+    $(function(){
+
+        queryPer();
+    })
+
+    queryPer = function(){
+
+
+        $("#data").datagrid({
+
+            url:"../user/queryPer",
+
+            columns:[
+                [
+                {field:'ck',checkbox:true},
+                {field:'id',title:'id',width:100},
+                {field:'name',title:'菜单名称',width:100},
+                {field:'text',title:'菜单文本',width:100},
+                {field:'url',title:'地址',width:100},
+                {field:'state',title:'状态',width:100},
+                {field:'description',title:'描述',width:100},
+                {field:'cz',title:'操作',width:100,
+                    formatter:function(value,row,index){
+                        return "<a href='javascript:updDialog("+row.id+")' class='easyui-linkbutton' iconCls='icon-ok'>绑定角色</a>";
+                    },
+                    /* 	formatter:function(value,row,index){
+                            return "<a href='javascript:SaveDialog()' class='easyui-linkbutton' iconCls='icon-ok'>修改</a>";
+                        }, */
+                },
+
+
+            ]
+            ],
+
+            pagination:true,
+
+            pageList:[2,5,10],
+
+            rownumbers:true,
+
+            fitColumns:true
+
+        })
+    }
+    //全局变量
+    var roles;
+    //选中角色所对用的菜单
+    updDialog = function(roleid){
+        roles = roleid;
+
+        $("#dd").dialog('open');
+
+        $("#tree").tree({
+
+            url: '../user/getPermissionByRId?roleid='+roleid,
+            checkbox: true,
+            // 去掉 父子节点 级联
+            cascadeCheck:false,
+        })
+
+    }
+
+
+    //编辑 角色所对应的菜单
+    updateRolePermiss = function(){
+
+        var perids = getChecked();
+        alert(perids)
+        var roleid = roles;
+
+        $.ajax({
+
+            url:"../user/updateRolePremiss",
+            data:{perids:perids,roleid:roleid},
+            type:"post",
+            success:function(data){
+                if(data=='1'){
+                    $("#dd").dialog("close")
+
+                }else{
+
+
+                }
+            }
+        })
+
+    }
+
+    getChecked = function(){
+
+        var nodes = $("#tree").tree('getChecked');
+        var s = "";
+
+        for (var i = 0; i < nodes.length; i++) {
+            if(s!='')s+=',';
+            s+= nodes[i].id;
+
+        }
+        return s;
+    }
+
+
+</script>
+
+</html>

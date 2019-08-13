@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="../js/jquery-1.8.0.js"></script>
+    <script type="text/javascript" src="../js/easyui1.5/jquery.easyui.min.js"> </script>
+    <script type="text/javascript" src="../js/easyui1.5/locale/easyui-lang-zh_CN.js"> </script>
+
+    <link rel="stylesheet" href="../js/easyui1.5/themes/default/easyui.css"></link>
+    <link rel="stylesheet" href="../js/easyui1.5/themes/icon.css"></link>
+    <!-- ztree树 -->
+    <script src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+    <link rel="stylesheet" href="../js/ztree/zTreeStyle.css" />
+    <script type="text/javascript" src="../js/EasyuiCRUD.js"></script>
+</head>
+<body>
+<!--
+<div>
+    用户名：<input id="logname" name="logname"><br>
+
+    时间:<input id="startdate" type="date" name="startdate">-&#45;&#45;<input id="enddate" type="date" name="enddate"><br>
+
+    <a id="btn" class="easyui-linkbutton" iconCls="icon-search" plain="true">搜索</a>
+</div>
+-->
+
+<div>
+    <a href="javaScript:openDialog()" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加</a>
+</div>
+<table id="data" class="easyui-datagrid"></table>
+
+<div id="mydialog" closed="true" button="#AddOk" class="easyui-dialog" data-options="modal:true,closed:true" style="width:400px;height:200px;">
+    <!--<form id="addForm">
+
+        <table>
+            <tr>
+                <td>日志内容</td>
+                <td><input type="hidden" id="aa" name="id">
+                    <input type="text" name="logname" class="easyui-validatebox" required="true">
+                </td>
+            </tr>
+            <tr>
+                <td>ip</td>
+                <td>
+                    <input type="text" name="ip" class="easyui-validatebox" required="true">
+                </td>
+            </tr>
+
+            <tr>
+                <td>userId</td>
+                <td>
+                    <input type="text" name="userId" class="easyui-validatebox" required="true">
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>时间</td>
+                <td>
+                    <input type="date" name="logtime">
+                </td>
+            </tr>
+
+        </table>
+    </form>
+-->
+    <div id="AddOk">
+        <a href="javaScript:saveDialog()" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">提交</a>
+        <a href="javaScript:cancelDialog()" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">取消 </a>
+
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+
+    $(function(){
+
+
+        queryLogList();
+    })
+
+
+    $("#btn").click(function(){
+
+        $("#data").datagrid('load',{
+            logname:$("#logname").val(),
+
+            startdate:$("#startdate").val(),
+            enddate:$("#enddate").val(),
+        })
+    })
+
+    queryLogList = function(){
+
+        $("#data").datagrid({
+            url:'../mongodb/queryLogList',
+            columns:[
+                [
+                {field:'id',title:'id',width:100},
+                {field:'logname',title:'物流日志',width:100},
+                {field:'ip',title:'ip',width:100},
+                {field:'userId',title:'用户id',width:100},
+                {field:'logtime',title:'时间',width:100},
+                /*   {field:'cdate',title:'时间',width:100}, */
+                {field:'cz',title:'操作',width:100,
+                    formatter:function(value,row,index){
+
+                        var aa = "<a href='javascript:Del(\""+row.id+"\")' >删除</a>";
+                        aa+= " | <a href='javascript:upd(\""+row.id+"\")' >修改</a>";
+                        return aa
+
+                    }
+                }
+            ]
+            ],
+
+
+            pagination:true,
+
+            pageList:[2,5,10],
+
+            rownumbers:true,
+
+            fitColumns:true
+
+        })
+    }
+
+
+    openDialog = function(){
+        $("#aa").val('');
+        $("#addForm").form('reset');
+        $("#mydialog").dialog('open')
+    }
+
+    upd = function(id){
+
+        alert(id)
+        $.ajax({
+            url:'../mongodb/updLog.do',
+            type:'post',
+            data:{
+                id:id
+            },
+            dataType:'json',
+            success:function(data){
+                $("#addForm").form('load',data);
+                $("#mydialog").dialog({
+                    title:'修改',
+                    closed:false
+                })
+            }
+        })
+    }
+
+    saveDialog = function(){
+        $("#addForm").form('submit',{
+
+            url:'../mongodb/addLog.do',
+            onSumbmit:function(){
+
+                return $("#addForm").form('validate')
+
+            },
+            success:function(data){
+                alert("添加成功！！")
+                //关闭窗口
+                $("#mydialog").dialog('close');
+                //刷新表格数据
+                $("#data").datagrid('reload');
+
+            }
+        });
+    }
+
+    Del = function(id){
+        alert(id)
+        $.ajax({
+
+            url:"../mongodb/delLog.do?id="+id,
+            success:function(){
+                $.messager.alert('1','删除成功');
+                location.href="<%=request.getContextPath()%>/page/log.do";
+            }
+        })
+    }
+</script>
+
+</html>

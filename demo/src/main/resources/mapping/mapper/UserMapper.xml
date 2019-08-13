@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.model.User" >
+    <id column="userId" property="userid" jdbcType="INTEGER" />
+    <result column="typeId" property="typeid" jdbcType="INTEGER" />
+    <result column="userAge" property="userage" jdbcType="INTEGER" />
+    <result column="userName" property="username" jdbcType="VARCHAR" />
+    <result column="userPassword" property="userpassword" jdbcType="VARCHAR" />
+    <result column="userTime" property="usertime" jdbcType="DATE" />
+  </resultMap>
+
+    <select id="query" resultMap="BaseResultMap">
+      select  * from t_user
+    </select>
+
+  <delete id="deleteUser">
+    delete from t_user where userid = #{id}
+  </delete>
+
+  <insert id="addUser">
+
+    insert into t_user(typeid,userage,username,userpassword,usertime)
+    values (#{typeid},#{userage},#{username},#{userpassword},now())
+  </insert>
+
+  <update id="updateUser" parameterType="com.jk.model.User">
+
+    update t_user set typeid=#{typeid},userage=#{userage},username=#{username},userpassword=#{userpassword} where userid = #{userid}
+
+  </update>
+</mapper>
