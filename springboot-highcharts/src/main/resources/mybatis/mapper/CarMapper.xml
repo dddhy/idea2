@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.dao.CarDao" >
+  
+  
+<!--
+   <select id="queryBook" resultType="java.util.LinkedHashMap">
+      select count(*) 总个数,bookTypeId 类型 from t_book GROUP BY bookTypeId
+   </select>
+-->
+
+<select id="queryZhuxing" resultType="java.util.LinkedHashMap">
+
+select color 颜色,count(color) 总个数, DATE_FORMAT(carTime,'%W') 时间 from t_car c GROUP BY DATE_FORMAT(carTime,'%W'),color
+
+</select>
+
+    <select id="queryYuan" resultType="java.util.LinkedHashMap">
+
+select color 颜色,count(color) 总个数, DATE_FORMAT(carTime,'%M') 月 from t_car c GROUP BY DATE_FORMAT(carTime,'%M'),color
+
+</select>
+
+
+    <select id="queryZhexian" resultType="java.util.LinkedHashMap">
+
+select color 颜色,count(color) 总个数, DATE_FORMAT(carTime,'%m') 月份 from t_car c GROUP BY DATE_FORMAT(carTime,'%m'),color
+
+</select>
+
+    <select id="querySandian" resultType="java.util.LinkedHashMap">
+
+select color 颜色,count(color) 总个数, DATE_FORMAT(carTime,'%d') 日 from t_car c GROUP BY DATE_FORMAT(carTime,'%d'),color
+
+</select>
+
+ 
+</mapper>
