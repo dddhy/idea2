@@ -72,6 +72,7 @@ public class CarController {
     @ResponseBody
     public List<Map<String, Object>> queryYuan() {
         System.err.println(123);
+        System.out.println(222);
         List<Map<String, Object>> list = carService.queryYuan();
         List<Map<String, Object>> list1 = new ArrayList<>();
         for (Map<String, Object> map1 : list) {
