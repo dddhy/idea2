@@ -115,7 +115,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.13.1</version>
       <!-- scope的意思就是测试的时候有jar包，发布的时候不需要发布 -->
       <scope>test</scope>
     </dependency>
